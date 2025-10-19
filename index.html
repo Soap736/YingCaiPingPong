@@ -1,0 +1,3188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英才实验学院乒乓球俱乐部积分系统 v1.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #FFD700;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background-color: #FFD700;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFEC8B 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 2px solid white;
+        }
+        
+        .title-container h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .version {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .admin-status {
+            display: inline-block;
+            background-color: #FFD700;
+            color: #1e3c72;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: #1e3c72;
+            border-radius: 10px 10px 0 0;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            color: white;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .tab:hover {
+            background-color: #2a5298;
+        }
+        
+        .tab.active {
+            background-color: #FFD700;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+        
+        .tab.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #1e3c72;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-height: 500px;
+            border: 1px solid #eaeaea;
+            border-top: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #1e3c72;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.2);
+        }
+        
+        button {
+            background-color: #1e3c72;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        button.danger {
+            background-color: #e74c3c;
+        }
+        
+        button.danger:hover {
+            background-color: #c0392b;
+        }
+        
+        button.success {
+            background-color: #27ae60;
+        }
+        
+        button.success:hover {
+            background-color: #219653;
+        }
+        
+        button.warning {
+            background-color: #f39c12;
+        }
+        
+        button.warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .col {
+            flex: 1;
+            padding: 0 15px;
+            min-width: 300px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        th {
+            background-color: #f0f5ff;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        tr:hover {
+            background-color: #f8fbff;
+        }
+        
+        .ranking-section {
+            margin-bottom: 40px;
+        }
+        
+        .ranking-title {
+            color: #1e3c72;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ranking-title::before {
+            content: "🏓";
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        
+        .stat-item {
+            background: linear-gradient(135deg, #f0f5ff 0%, #e6eeff 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 0 15px 15px 0;
+            min-width: 180px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #1e3c72;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .warning {
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ffeaea;
+            border-radius: 6px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 450px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid #1e3c72;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #1e3c72;
+        }
+        
+        .login-form {
+            margin-top: 20px;
+        }
+        
+        .battle-log {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .group-display {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            white-space: pre-line;
+        }
+        
+        .history-display {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            white-space: pre-line;
+        }
+        
+        .member-list {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .member-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .member-item:hover {
+            background-color: #f0f5ff;
+        }
+        
+        .member-item:last-child {
+            border-bottom: none;
+        }
+        
+        .admin-only {
+            display: none;
+        }
+        
+        .admin-mode .admin-only {
+            display: block;
+        }
+        
+        .admin-mode .admin-tab {
+            display: inline-block;
+        }
+        
+        .tournament-stage {
+            margin: 20px 0;
+        }
+        
+        .stage-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stage-content {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            background-color: #fcfcff;
+        }
+        
+        .tournament-group {
+            margin-bottom: 25px;
+        }
+        
+        .group-header {
+            background-color: #f0f5ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1e3c72;
+            border-left: 4px solid #FFD700;
+        }
+        
+        .match-item {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .match-item:hover {
+            background-color: #f8fbff;
+        }
+        
+        .match-item.completed {
+            color: #888;
+            background-color: #f9f9f9;
+        }
+        
+        .tournament-info {
+            background-color: #f0f5ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1e3c72;
+        }
+        
+        .group-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .group-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: all 0.3s;
+        }
+        
+        .group-tab.active {
+            background-color: #f0f5ff;
+            border-bottom: 3px solid #1e3c72;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+        
+        .group-content {
+            display: none;
+        }
+        
+        .group-content.active {
+            display: block;
+        }
+        
+        .champion-display {
+            background-color: #fff9e6;
+            border: 1px solid #FFD700;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: #1e3c72;
+        }
+        
+        .match-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .medal {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .gold {
+            background-color: #FFD700;
+            color: #1e3c72;
+        }
+        
+        .silver {
+            background-color: #C0C0C0;
+            color: #333;
+        }
+        
+        .bronze {
+            background-color: #CD7F32;
+            color: white;
+        }
+        
+        .academy-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f5ff;
+        }
+        
+        .section-header h2 {
+            color: #1e3c72;
+            margin-right: 15px;
+        }
+        
+        .section-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .score-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .score-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .score-option:hover {
+            background-color: #f0f5ff;
+            border-color: #1e3c72;
+        }
+        
+        .score-option.selected {
+            background-color: #e6eeff;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.2);
+        }
+        
+        .score-display {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #f0f5ff;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-left: 10px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #eaeaea;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .copyright {
+            margin-bottom: 10px;
+        }
+        
+        .creator {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .col {
+                flex: 100%;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+            
+            .stage-buttons {
+                flex-direction: column;
+            }
+            
+            .match-actions {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                min-width: 100%;
+                margin-right: 0;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+            }
+            
+            .logo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="academy-badge">英才实验学院</div>
+            <div class="logo-container">
+                <div class="logo">英才</div>
+                <div class="title-container">
+                    <h1>英才实验学院乒乓球俱乐部<span class="version">v1.0</span></h1>
+                    <div class="subtitle">积分排名与赛事管理系统</div>
+                </div>
+            </div>
+            <div id="adminStatus" class="admin-status" style="display: none;">管理员模式</div>
+            <div style="margin-top: 15px;">
+                <button id="adminLoginBtn" class="success">管理员登录</button>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="ranking">积分排名</button>
+            <button class="tab" data-tab="history">历史战绩</button>
+            <button class="tab" data-tab="tournament-results">比赛结果</button>
+            <button class="tab admin-only" data-tab="members">成员管理</button>
+            <button class="tab admin-only" data-tab="battle">对战记录</button>
+            <button class="tab admin-only" data-tab="tournament">比赛管理</button>
+            <button class="tab admin-only" data-tab="tournament-battle">比赛对战</button>
+            <button class="tab admin-only" data-tab="admin">系统管理</button>
+        </div>
+        
+        <!-- 积分排名页面 -->
+        <div id="ranking" class="tab-content active">
+            <div class="section-header">
+                <span class="section-icon">🏆</span>
+                <h2>积分排名</h2>
+            </div>
+            <button id="refreshRanking" class="success">刷新排名</button>
+            
+            <div class="ranking-section">
+                <h3 class="ranking-title">积分排名</h3>
+                <table id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>姓名</th>
+                            <th>积分</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingBody">
+                        <!-- 排名数据将通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-section">
+                <h3 class="ranking-title">参与赛事次数排名</h3>
+                <table id="tournamentParticipationTable">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>姓名</th>
+                            <th>参与赛事次数</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tournamentParticipationBody">
+                        <!-- 参与赛事次数排名数据将通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="ranking-section">
+                <h3 class="ranking-title">胜场数量排名</h3>
+                <table id="winsTable">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>姓名</th>
+                            <th>胜场数量</th>
+                        </tr>
+                    </thead>
+                    <tbody id="winsBody">
+                        <!-- 胜场数量排名数据将通过JavaScript动态填充 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 历史战绩页面 -->
+        <div id="history" class="tab-content">
+            <div class="section-header">
+                <span class="section-icon">📊</span>
+                <h2>历史战绩</h2>
+            </div>
+            <div class="form-group">
+                <label for="historyMember">选择成员查看历史战绩:</label>
+                <select id="historyMember">
+                    <option value="">--请选择成员--</option>
+                </select>
+                <button id="showHistory" class="success">查询战绩</button>
+            </div>
+            
+            <h3>战绩统计:</h3>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">胜场</div>
+                    <div id="winsCount" class="stat-value">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">负场</div>
+                    <div id="lossesCount" class="stat-value">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">平局</div>
+                    <div id="drawsCount" class="stat-value">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">胜率</div>
+                    <div id="winRate" class="stat-value">0%</div>
+                </div>
+            </div>
+            
+            <h3>历史战绩:</h3>
+            <div id="historyDisplay" class="history-display">
+                <!-- 历史战绩将通过JavaScript动态填充 -->
+            </div>
+        </div>
+        
+        <!-- 比赛结果页面 -->
+        <div id="tournament-results" class="tab-content">
+            <div class="section-header">
+                <span class="section-icon">🎯</span>
+                <h2>比赛结果</h2>
+            </div>
+            <div class="form-group">
+                <label for="resultsTournament">选择比赛:</label>
+                <select id="resultsTournament">
+                    <option value="">--请选择比赛--</option>
+                </select>
+                <button id="showTournamentResults" class="success">查看比赛结果</button>
+            </div>
+            
+            <div id="tournamentResultsDisplay" class="history-display">
+                <!-- 比赛结果将通过JavaScript动态填充 -->
+            </div>
+        </div>
+        
+        <!-- 成员管理页面 (仅管理员可见) -->
+        <div id="members" class="tab-content admin-only">
+            <div class="section-header">
+                <span class="section-icon">👥</span>
+                <h2>成员管理</h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>添加新成员</h3>
+                    <div class="form-group">
+                        <label for="memberName">姓名:</label>
+                        <input type="text" id="memberName" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="initialScore">初始积分:</label>
+                        <input type="number" id="initialScore" value="1500">
+                    </div>
+                    <button id="addMember" class="success">添加成员</button>
+                </div>
+                
+                <div class="col">
+                    <h3>所有成员</h3>
+                    <div id="membersList" class="member-list">
+                        <!-- 成员列表将通过JavaScript动态填充 -->
+                    </div>
+                    <button id="deleteMember" class="danger">删除选中成员</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 对战记录页面 (仅管理员可见) -->
+        <div id="battle" class="tab-content admin-only">
+            <div class="section-header">
+                <span class="section-icon">⚔️</span>
+                <h2>对战记录</h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>选择对战成员</h3>
+                    <div class="form-group">
+                        <label for="member1">成员1:</label>
+                        <select id="member1">
+                            <option value="">--请选择成员--</option>
+                        </select>
+                        <div id="member1Score">当前积分: -</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member2">成员2:</label>
+                        <select id="member2">
+                            <option value="">--请选择成员--</option>
+                        </select>
+                        <div id="member2Score">当前积分: -</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventName">赛事名称:</label>
+                        <input type="text" id="eventName" value="日常对战">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>对战结果:</label>
+                        <div>
+                            <input type="radio" id="member1Win" name="battleResult" value="member1_win">
+                            <label for="member1Win" style="display: inline;">成员1获胜</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="member2Win" name="battleResult" value="member2_win">
+                            <label for="member2Win" style="display: inline;">成员2获胜</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="draw" name="battleResult" value="draw">
+                            <label for="draw" style="display: inline;">平局</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="forfeit1" name="battleResult" value="forfeit1">
+                            <label for="forfeit1" style="display: inline;">成员1弃权</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="forfeit2" name="battleResult" value="forfeit2">
+                            <label for="forfeit2" style="display: inline;">成员2弃权</label>
+                        </div>
+                    </div>
+                    
+                    <button id="recordBattle" class="success">记录对战结果</button>
+                </div>
+                
+                <div class="col">
+                    <h3>最近对战记录</h3>
+                    <div id="battleLog" class="battle-log">
+                        <!-- 对战日志将通过JavaScript动态填充 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 比赛管理页面 (仅管理员可见) -->
+        <div id="tournament" class="tab-content admin-only">
+            <div class="section-header">
+                <span class="section-icon">🏅</span>
+                <h2>比赛管理</h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>创建新比赛</h3>
+                    <div class="form-group">
+                        <label for="tournamentName">比赛名称:</label>
+                        <input type="text" id="tournamentName" placeholder="请输入比赛名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>选择参赛成员:</label>
+                        <button id="selectAllMembers">全选</button>
+                        <div id="memberSelectList" class="member-list">
+                            <!-- 成员选择列表将通过JavaScript动态填充 -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>比赛设置:</label>
+                        <div class="row">
+                            <div class="col">
+                                <label for="groupSize">每组人数:</label>
+                                <select id="groupSize">
+                                    <option value="3">3人</option>
+                                    <option value="4">4人</option>
+                                    <option value="5">5人</option>
+                                    <option value="6">6人</option>
+                                    <option value="7">7人</option>
+                                    <option value="8">8人</option>
+                                    <option value="9">9人</option>
+                                    <option value="10">10人</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="advanceCount">每组晋级人数:</label>
+                                <select id="advanceCount">
+                                    <option value="1">1人</option>
+                                    <option value="2">2人</option>
+                                    <option value="3">3人</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="createTournament" class="success">创建比赛并分组</button>
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="tournamentSelect">选择比赛:</label>
+                        <select id="tournamentSelect">
+                            <option value="">--请选择比赛--</option>
+                        </select>
+                        <button id="enterTournament" class="success">进入比赛</button>
+                    </div>
+                </div>
+                
+                <div class="col">
+                    <h3>分组情况</h3>
+                    <div id="groupDisplay" class="group-display">
+                        <!-- 分组情况将通过JavaScript动态填充 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 比赛对战页面 (仅管理员可见) -->
+        <div id="tournament-battle" class="tab-content admin-only">
+            <div class="section-header">
+                <span class="section-icon">🎮</span>
+                <h2>比赛对战</h2>
+            </div>
+            <div class="tournament-info">
+                <h3 id="currentTournamentName">当前比赛: 无</h3>
+                <div id="championDisplay" class="champion-display" style="display: none;">
+                    <!-- 冠军信息将通过JavaScript动态填充 -->
+                </div>
+            </div>
+            
+            <div class="tournament-stage">
+                <h3>比赛阶段:</h3>
+                <div class="stage-buttons">
+                    <button id="groupStageBtn" class="success">小组赛</button>
+                    <button id="knockoutStageBtn">淘汰赛</button>
+                    <button id="generateKnockoutBtn" class="success" style="display: none;">生成淘汰赛</button>
+                </div>
+                
+                <div id="groupStageContent" class="stage-content">
+                    <!-- 小组赛内容将通过JavaScript动态填充 -->
+                </div>
+                
+                <div id="knockoutStageContent" class="stage-content" style="display: none;">
+                    <!-- 淘汰赛内容将通过JavaScript动态填充 -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- 系统管理页面 (仅管理员可见) -->
+        <div id="admin" class="tab-content admin-only">
+            <div class="section-header">
+                <span class="section-icon">⚙️</span>
+                <h2>系统管理</h2>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>系统状态</h3>
+                    <div class="stat-item">
+                        <div class="stat-label">成员数量</div>
+                        <div id="memberCount" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">对战记录数量</div>
+                        <div id="battleCount" class="stat-value">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">比赛数量</div>
+                        <div id="tournamentCount" class="stat-value">0</div>
+                    </div>
+                    
+                    <h3>数据管理</h3>
+                    <button id="backupData" class="success">备份数据</button>
+                    <button id="restoreData" class="success">恢复数据</button>
+                    
+                    <h3>系统初始化</h3>
+                    <div class="warning">警告: 初始化将删除所有数据，此操作不可逆!</div>
+                    <button id="initializeSystem" class="danger">初始化系统数据</button>
+                    
+                    <h3>退出管理员模式</h3>
+                    <button id="exitAdmin" class="danger">退出管理员模式</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+            <div class="copyright">最终解释权归英才实验学院乒乓球社团所有</div>
+            <div class="creator">系统设计：崔铭正</div>
+        </div>
+    </div>
+    
+    <!-- 管理员登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>管理员登录</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="password">请输入管理员密码:</label>
+                    <input type="password" id="password" placeholder="密码">
+                </div>
+                <button id="loginBtn" class="success">登录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 比赛对战结果记录模态框 -->
+    <div id="battleResultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="battleModalTitle">记录比赛对战结果</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="battle-form">
+                <div class="form-group">
+                    <h4 id="battlePlayers"></h4>
+                </div>
+                <div class="form-group">
+                    <label>选择比分:</label>
+                    <div id="battleResultOptions" class="score-options">
+                        <!-- 比分选项将通过JavaScript动态填充 -->
+                    </div>
+                </div>
+                <button id="confirmBattle" class="success">确认记录</button>
+                <button id="deleteBattle" class="danger" style="display: none;">删除记录</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 淘汰赛记录模态框 -->
+    <div id="knockoutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>记录淘汰赛结果</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="knockout-form">
+                <div class="form-group">
+                    <label for="knockoutMatchSelect">选择淘汰赛对阵:</label>
+                    <select id="knockoutMatchSelect">
+                        <option value="">--请选择对阵--</option>
+                    </select>
+                </div>
+                <button id="selectKnockoutMatch" class="success">选择对阵</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据存储
+        let members = {};
+        let battleHistory = [];
+        let tournaments = [];
+        let currentTournament = null;
+        let adminMode = false;
+        let currentGroupIndex = 0;
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            setupEventListeners();
+            updateRanking();
+            updateMemberLists();
+            updateAdminStats();
+            updateTournamentLists();
+        });
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 选项卡切换
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // 管理员登录
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+            document.getElementById('loginBtn').addEventListener('click', adminLogin);
+            document.querySelector('.close-btn').addEventListener('click', () => {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+
+            // 积分排名
+            document.getElementById('refreshRanking').addEventListener('click', updateRanking);
+
+            // 历史战绩
+            document.getElementById('showHistory').addEventListener('click', showMemberHistory);
+
+            // 比赛结果
+            document.getElementById('showTournamentResults').addEventListener('click', showTournamentResults);
+
+            // 成员管理
+            document.getElementById('addMember').addEventListener('click', addMember);
+            document.getElementById('deleteMember').addEventListener('click', deleteMember);
+
+            // 对战记录
+            document.getElementById('member1').addEventListener('change', updateMemberScores);
+            document.getElementById('member2').addEventListener('change', updateMemberScores);
+            document.getElementById('recordBattle').addEventListener('click', recordBattle);
+
+            // 比赛管理
+            document.getElementById('selectAllMembers').addEventListener('click', selectAllMembers);
+            document.getElementById('createTournament').addEventListener('click', createTournament);
+            document.getElementById('enterTournament').addEventListener('click', enterTournament);
+
+            // 比赛对战
+            document.getElementById('groupStageBtn').addEventListener('click', () => {
+                document.getElementById('groupStageContent').style.display = 'block';
+                document.getElementById('knockoutStageContent').style.display = 'none';
+                document.getElementById('groupStageBtn').classList.add('success');
+                document.getElementById('knockoutStageBtn').classList.remove('success');
+                setupGroupStageDisplay();
+            });
+            
+            document.getElementById('knockoutStageBtn').addEventListener('click', () => {
+                document.getElementById('groupStageContent').style.display = 'none';
+                document.getElementById('knockoutStageContent').style.display = 'block';
+                document.getElementById('knockoutStageBtn').classList.add('success');
+                document.getElementById('groupStageBtn').classList.remove('success');
+                setupKnockoutStageDisplay();
+            });
+
+            document.getElementById('generateKnockoutBtn').addEventListener('click', generateKnockoutStage);
+
+            // 系统管理
+            document.getElementById('backupData').addEventListener('click', backupData);
+            document.getElementById('restoreData').addEventListener('click', restoreData);
+            document.getElementById('initializeSystem').addEventListener('click', initializeSystem);
+            document.getElementById('exitAdmin').addEventListener('click', exitAdminMode);
+
+            // 对战结果模态框
+            document.getElementById('confirmBattle').addEventListener('click', confirmBattleResult);
+            document.getElementById('deleteBattle').addEventListener('click', deleteBattleRecord);
+            document.querySelectorAll('#battleResultModal .close-btn')[0].addEventListener('click', () => {
+                document.getElementById('battleResultModal').style.display = 'none';
+            });
+
+            // 淘汰赛模态框
+            document.getElementById('selectKnockoutMatch').addEventListener('click', selectKnockoutMatch);
+            document.querySelectorAll('#knockoutModal .close-btn')[0].addEventListener('click', () => {
+                document.getElementById('knockoutModal').style.display = 'none';
+            });
+        }
+
+        // 切换选项卡
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                if (content.id === tabId) {
+                    content.classList.add('active');
+                }
+            });
+        }
+
+        // 管理员登录
+        function adminLogin() {
+            const password = document.getElementById('password').value;
+            if (password === '1092973377') {
+                adminMode = true;
+                document.getElementById('loginModal').style.display = 'none';
+                document.body.classList.add('admin-mode');
+                document.getElementById('adminStatus').style.display = 'inline-block';
+                document.getElementById('adminLoginBtn').textContent = '管理员退出';
+                document.getElementById('adminLoginBtn').classList.remove('success');
+                document.getElementById('adminLoginBtn').classList.add('danger');
+                document.getElementById('adminLoginBtn').removeEventListener('click', adminLogin);
+                document.getElementById('adminLoginBtn').addEventListener('click', exitAdminMode);
+                alert('管理员模式已启用');
+            } else if (password) {
+                alert('密码错误');
+            }
+        }
+
+        // 退出管理员模式
+        function exitAdminMode() {
+            if (confirm('确定要退出管理员模式吗？')) {
+                adminMode = false;
+                document.body.classList.remove('admin-mode');
+                document.getElementById('adminStatus').style.display = 'none';
+                document.getElementById('adminLoginBtn').textContent = '管理员登录';
+                document.getElementById('adminLoginBtn').classList.remove('danger');
+                document.getElementById('adminLoginBtn').classList.add('success');
+                document.getElementById('adminLoginBtn').removeEventListener('click', exitAdminMode);
+                document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                    document.getElementById('loginModal').style.display = 'flex';
+                });
+                alert('已退出管理员模式');
+            }
+        }
+
+        // 加载数据
+        function loadData() {
+            const savedMembers = localStorage.getItem('pingpong_members');
+            const savedHistory = localStorage.getItem('pingpong_history');
+            const savedTournaments = localStorage.getItem('pingpong_tournaments');
+
+            if (savedMembers) {
+                members = JSON.parse(savedMembers);
+            }
+
+            if (savedHistory) {
+                battleHistory = JSON.parse(savedHistory);
+            }
+
+            if (savedTournaments) {
+                tournaments = JSON.parse(savedTournaments);
+            }
+        }
+
+        // 保存数据
+        function saveData() {
+            localStorage.setItem('pingpong_members', JSON.stringify(members));
+            localStorage.setItem('pingpong_history', JSON.stringify(battleHistory));
+            localStorage.setItem('pingpong_tournaments', JSON.stringify(tournaments));
+            updateAdminStats();
+        }
+
+        // 更新管理员统计信息
+        function updateAdminStats() {
+            document.getElementById('memberCount').textContent = Object.keys(members).length;
+            document.getElementById('battleCount').textContent = battleHistory.length;
+            document.getElementById('tournamentCount').textContent = tournaments.length;
+        }
+
+        // 计算参与赛事次数排名
+        function calculateTournamentParticipationRanking() {
+            const participationStats = {};
+            
+            // 初始化每个成员的统计数据
+            Object.keys(members).forEach(name => {
+                participationStats[name] = 0;
+            });
+            
+            // 遍历所有比赛，统计每个成员的参与次数
+            tournaments.forEach(tournament => {
+                if (tournament.participants) {
+                    tournament.participants.forEach(participant => {
+                        if (participationStats[participant] !== undefined) {
+                            participationStats[participant]++;
+                        }
+                    });
+                }
+            });
+            
+            // 转换为数组并按参与次数排序
+            const sortedStats = Object.entries(participationStats)
+                .sort((a, b) => b[1] - a[1]);
+            
+            return sortedStats;
+        }
+
+        // 计算胜场数量排名
+        function calculateWinsRanking() {
+            const winsStats = {};
+            
+            // 初始化每个成员的统计数据
+            Object.keys(members).forEach(name => {
+                winsStats[name] = 0;
+            });
+            
+            // 遍历所有对战记录，统计每个成员的胜场数
+            battleHistory.forEach(battle => {
+                if (battle.result === 'member1_win') {
+                    winsStats[battle.member1]++;
+                } else if (battle.result === 'member2_win') {
+                    winsStats[battle.member2]++;
+                }
+                // 注意：弃权不算胜场
+            });
+            
+            // 转换为数组并按胜场数排序
+            const sortedStats = Object.entries(winsStats)
+                .sort((a, b) => b[1] - a[1]);
+            
+            return sortedStats;
+        }
+
+        // 更新积分排名
+        function updateRanking() {
+            // 更新积分排名
+            const rankingBody = document.getElementById('rankingBody');
+            rankingBody.innerHTML = '';
+
+            // 按积分排序
+            const sortedMembers = Object.entries(members)
+                .sort((a, b) => b[1] - a[1])
+                .map(([name, score], index) => ({ rank: index + 1, name, score }));
+
+            sortedMembers.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.rank}</td>
+                    <td>${member.name}</td>
+                    <td>${member.score}</td>
+                `;
+                rankingBody.appendChild(row);
+            });
+            
+            // 更新参与赛事次数排名
+            const tournamentParticipationBody = document.getElementById('tournamentParticipationBody');
+            tournamentParticipationBody.innerHTML = '';
+            
+            const tournamentParticipationRanking = calculateTournamentParticipationRanking();
+            tournamentParticipationRanking.forEach(([name, count], index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${name}</td>
+                    <td>${count}</td>
+                `;
+                tournamentParticipationBody.appendChild(row);
+            });
+            
+            // 更新胜场数量排名
+            const winsBody = document.getElementById('winsBody');
+            winsBody.innerHTML = '';
+            
+            const winsRanking = calculateWinsRanking();
+            winsRanking.forEach(([name, wins], index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${name}</td>
+                    <td>${wins}</td>
+                `;
+                winsBody.appendChild(row);
+            });
+        }
+
+        // 更新成员列表
+        function updateMemberLists() {
+            // 更新历史战绩成员下拉框
+            const historyMember = document.getElementById('historyMember');
+            historyMember.innerHTML = '<option value="">--请选择成员--</option>';
+            
+            Object.keys(members).forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                historyMember.appendChild(option);
+            });
+
+            // 更新对战记录成员下拉框
+            const member1 = document.getElementById('member1');
+            const member2 = document.getElementById('member2');
+            member1.innerHTML = member2.innerHTML = '<option value="">--请选择成员--</option>';
+            
+            Object.keys(members).forEach(name => {
+                const option1 = document.createElement('option');
+                option1.value = name;
+                option1.textContent = name;
+                member1.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = name;
+                option2.textContent = name;
+                member2.appendChild(option2);
+            });
+
+            // 更新成员管理列表
+            const membersList = document.getElementById('membersList');
+            membersList.innerHTML = '';
+            
+            Object.entries(members).forEach(([name, score]) => {
+                const memberItem = document.createElement('div');
+                memberItem.className = 'member-item';
+                memberItem.innerHTML = `
+                    <span>${name}: ${score}分</span>
+                    <input type="checkbox" data-name="${name}">
+                `;
+                membersList.appendChild(memberItem);
+            });
+
+            // 更新比赛管理成员选择列表
+            const memberSelectList = document.getElementById('memberSelectList');
+            memberSelectList.innerHTML = '';
+            
+            Object.keys(members).forEach(name => {
+                const memberItem = document.createElement('div');
+                memberItem.className = 'member-item';
+                memberItem.innerHTML = `
+                    <span>${name}</span>
+                    <input type="checkbox" data-name="${name}">
+                `;
+                memberSelectList.appendChild(memberItem);
+            });
+        }
+
+        // 更新比赛列表
+        function updateTournamentLists() {
+            // 更新比赛管理下拉框
+            const tournamentSelect = document.getElementById('tournamentSelect');
+            tournamentSelect.innerHTML = '<option value="">--请选择比赛--</option>';
+            
+            tournaments.forEach(tournament => {
+                const option = document.createElement('option');
+                option.value = tournament.name;
+                option.textContent = tournament.name;
+                tournamentSelect.appendChild(option);
+            });
+
+            // 更新比赛结果下拉框
+            const resultsTournament = document.getElementById('resultsTournament');
+            resultsTournament.innerHTML = '<option value="">--请选择比赛--</option>';
+            
+            tournaments.forEach(tournament => {
+                const option = document.createElement('option');
+                option.value = tournament.name;
+                option.textContent = tournament.name;
+                resultsTournament.appendChild(option);
+            });
+        }
+
+        // 显示成员历史战绩
+        function showMemberHistory() {
+            const member = document.getElementById('historyMember').value;
+            if (!member) {
+                alert('请选择成员');
+                return;
+            }
+
+            // 统计战绩
+            let wins = 0, losses = 0, draws = 0, forfeits = 0;
+            const memberBattles = battleHistory.filter(battle => 
+                battle.member1 === member || battle.member2 === member
+            );
+
+            memberBattles.forEach(battle => {
+                if (battle.result === 'member1_win') {
+                    if (battle.member1 === member) wins++;
+                    else losses++;
+                } else if (battle.result === 'member2_win') {
+                    if (battle.member2 === member) wins++;
+                    else losses++;
+                } else if (battle.result === 'draw') {
+                    draws++;
+                } else if (battle.result === 'forfeit1') {
+                    if (battle.member1 === member) forfeits++;
+                    else wins++;
+                } else if (battle.result === 'forfeit2') {
+                    if (battle.member2 === member) forfeits++;
+                    else wins++;
+                }
+            });
+
+            // 更新统计信息
+            const totalBattles = wins + losses + draws + forfeits;
+            const winRate = totalBattles > 0 ? (wins / totalBattles * 100).toFixed(1) : 0;
+
+            document.getElementById('winsCount').textContent = wins;
+            document.getElementById('lossesCount').textContent = losses;
+            document.getElementById('drawsCount').textContent = draws;
+            document.getElementById('winRate').textContent = `${winRate}%`;
+
+            // 显示历史战绩
+            const historyDisplay = document.getElementById('historyDisplay');
+            let historyText = `${member} 的历史战绩 (共 ${totalBattles} 场):\n\n`;
+
+            if (memberBattles.length === 0) {
+                historyText += '暂无对战记录';
+            } else {
+                // 按时间倒序排列
+                memberBattles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                memberBattles.forEach(battle => {
+                    let opponent, result;
+                    
+                    if (battle.member1 === member) {
+                        opponent = battle.member2;
+                        if (battle.result === 'member1_win') result = '胜利';
+                        else if (battle.result === 'member2_win') result = '失败';
+                        else if (battle.result === 'draw') result = '平局';
+                        else if (battle.result === 'forfeit1') result = '弃权';
+                        else if (battle.result === 'forfeit2') result = '对手弃权';
+                    } else {
+                        opponent = battle.member1;
+                        if (battle.result === 'member2_win') result = '胜利';
+                        else if (battle.result === 'member1_win') result = '失败';
+                        else if (battle.result === 'draw') result = '平局';
+                        else if (battle.result === 'forfeit2') result = '弃权';
+                        else if (battle.result === 'forfeit1') result = '对手弃权';
+                    }
+                    
+                    const date = battle.date || '未知日期';
+                    const eventName = battle.event_name || '日常对战';
+                    
+                    historyText += `${date} - [${eventName}] 对战 ${opponent}: ${result}\n`;
+                });
+            }
+
+            historyDisplay.textContent = historyText;
+        }
+
+        // 显示比赛结果
+        function showTournamentResults() {
+            const tournamentName = document.getElementById('resultsTournament').value;
+            if (!tournamentName) {
+                alert('请选择比赛');
+                return;
+            }
+
+            // 查找比赛
+            const tournament = tournaments.find(t => t.name === tournamentName);
+            if (!tournament) {
+                alert('未找到选择的比赛');
+                return;
+            }
+
+            // 生成比赛结果文本
+            let resultsText = `比赛名称: ${tournament.name}\n`;
+            resultsText += `创建时间: ${tournament.timestamp || '未知'}\n`;
+            resultsText += `比赛状态: ${tournament.status || '未知'}\n\n`;
+
+            // 显示冠军信息
+            if (tournament.champion) {
+                resultsText += `🏆 冠军: ${tournament.champion} 🏆\n`;
+            }
+            if (tournament.runnerUp) {
+                resultsText += `🥈 亚军: ${tournament.runnerUp} 🥈\n`;
+            }
+            if (tournament.thirdPlace) {
+                resultsText += `🥉 季军: ${tournament.thirdPlace} 🥉\n`;
+            }
+            resultsText += "\n";
+
+            // 显示小组赛结果
+            resultsText += "=== 小组赛结果 ===\n\n";
+
+            if (tournament.groups) {
+                tournament.groups.forEach((group, i) => {
+                    resultsText += `第 ${i + 1} 组:\n`;
+
+                    // 计算小组积分
+                    const groupStats = calculateGroupStats(group, tournament.name);
+
+                    // 按积分排序
+                    const sortedStats = Object.entries(groupStats)
+                        .sort((a, b) => b[1].points - a[1].points);
+
+                    sortedStats.forEach(([name, stats], index) => {
+                        resultsText += `  ${index + 1}. ${name} - 积分: ${stats.points}, 胜: ${stats.wins}, 负: ${stats.losses}, 弃权: ${stats.forfeits}\n`;
+                    });
+
+                    // 显示晋级选手
+                    if (tournament.advanceCount && sortedStats.length > 0) {
+                        resultsText += `  晋级: `;
+                        for (let i = 0; i < Math.min(tournament.advanceCount, sortedStats.length); i++) {
+                            resultsText += `${sortedStats[i][0]}${i < Math.min(tournament.advanceCount, sortedStats.length) - 1 ? ', ' : ''}`;
+                        }
+                        resultsText += `\n`;
+                    }
+
+                    resultsText += "\n";
+                });
+            }
+
+            // 显示淘汰赛结果
+            if (tournament.knockout_bracket) {
+                resultsText += "=== 淘汰赛结果 ===\n\n";
+
+                Object.entries(tournament.knockout_bracket).forEach(([roundName, matches]) => {
+                    resultsText += `${roundName}:\n`;
+                    matches.forEach(match => {
+                        if (match.completed) {
+                            resultsText += `  ${match.player1} vs ${match.player2} -> ${match.winner}\n`;
+                        } else {
+                            resultsText += `  ${match.player1} vs ${match.player2} (未完成)\n`;
+                        }
+                    });
+                    resultsText += "\n";
+                });
+            }
+
+            // 显示比赛过程
+            resultsText += "=== 比赛过程 ===\n\n";
+
+            // 查找该比赛的所有对战记录
+            const tournamentBattles = battleHistory.filter(battle => 
+                battle.event_name === tournament.name
+            );
+
+            if (tournamentBattles.length > 0) {
+                // 按时间排序
+                tournamentBattles.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+                tournamentBattles.forEach(battle => {
+                    const date = battle.date || '未知日期';
+                    const { member1, member2 } = battle;
+
+                    let result;
+                    if (battle.result === 'member1_win') {
+                        result = `${member1} 胜`;
+                    } else if (battle.result === 'member2_win') {
+                        result = `${member2} 胜`;
+                    } else if (battle.result === 'draw') {
+                        result = '平局';
+                    } else if (battle.result === 'forfeit1') {
+                        result = `${member1} 弃权`;
+                    } else if (battle.result === 'forfeit2') {
+                        result = `${member2} 弃权`;
+                    }
+
+                    resultsText += `${date}: ${member1} vs ${member2} -> ${result}\n`;
+                });
+            } else {
+                resultsText += "暂无比赛记录\n";
+            }
+
+            // 显示结果
+            document.getElementById('tournamentResultsDisplay').textContent = resultsText;
+        }
+
+        // 添加成员
+        function addMember() {
+            const name = document.getElementById('memberName').value.trim();
+            const scoreStr = document.getElementById('initialScore').value.trim();
+
+            if (!name) {
+                alert('请输入姓名');
+                return;
+            }
+
+            const score = parseInt(scoreStr);
+            if (isNaN(score)) {
+                alert('积分必须是整数');
+                return;
+            }
+
+            members[name] = score;
+            saveData();
+            updateMemberLists();
+            updateRanking();
+
+            document.getElementById('memberName').value = '';
+            alert(`成员 ${name} 添加成功`);
+        }
+
+        // 删除成员
+        function deleteMember() {
+            const checkboxes = document.querySelectorAll('#membersList input[type="checkbox"]:checked');
+            if (checkboxes.length === 0) {
+                alert('请选择要删除的成员');
+                return;
+            }
+
+            const names = Array.from(checkboxes).map(cb => cb.getAttribute('data-name'));
+            if (confirm(`确定要删除选中的 ${names.length} 名成员吗？这将删除这些成员的所有数据，且不可恢复！`)) {
+                names.forEach(name => {
+                    delete members[name];
+                    // 从对战记录中删除
+                    battleHistory = battleHistory.filter(battle => 
+                        battle.member1 !== name && battle.member2 !== name
+                    );
+                    // 从比赛记录中删除
+                    tournaments.forEach(tournament => {
+                        if (tournament.participants && tournament.participants.includes(name)) {
+                            tournament.participants = tournament.participants.filter(p => p !== name);
+                        }
+                        if (tournament.groups) {
+                            tournament.groups.forEach(group => {
+                                const index = group.indexOf(name);
+                                if (index !== -1) {
+                                    group.splice(index, 1);
+                                }
+                            });
+                        }
+                    });
+                });
+
+                // 删除空的分组和空比赛
+                tournaments = tournaments.filter(tournament => 
+                    tournament.participants && tournament.participants.length > 0
+                );
+
+                saveData();
+                updateMemberLists();
+                updateRanking();
+                updateTournamentLists();
+                alert('选中的成员已删除');
+            }
+        }
+
+        // 更新成员积分显示
+        function updateMemberScores() {
+            const member1 = document.getElementById('member1').value;
+            const member2 = document.getElementById('member2').value;
+
+            document.getElementById('member1Score').textContent = 
+                member1 && members[member1] ? `当前积分: ${members[member1]}` : '当前积分: -';
+            
+            document.getElementById('member2Score').textContent = 
+                member2 && members[member2] ? `当前积分: ${members[member2]}` : '当前积分: -';
+        }
+
+        // 计算积分变化
+        function calculateRatingChange(playerRating, opponentRating, result, kFactor = 32) {
+            const expectedScore = 1 / (1 + Math.pow(10, (opponentRating - playerRating) / 400));
+            const ratingChange = kFactor * (result - expectedScore);
+            return Math.round(ratingChange);
+        }
+
+        // 记录对战结果
+        function recordBattle() {
+            const member1 = document.getElementById('member1').value;
+            const member2 = document.getElementById('member2').value;
+            const result = document.querySelector('input[name="battleResult"]:checked').value;
+            const eventName = document.getElementById('eventName').value.trim() || '日常对战';
+
+            if (!member1 || !member2) {
+                alert('请选择对战成员');
+                return;
+            }
+
+            if (member1 === member2) {
+                alert('不能选择相同的成员');
+                return;
+            }
+
+            // 获取当前积分
+            const member1Rating = members[member1];
+            const member2Rating = members[member2];
+
+            // 创建对战记录
+            const battleRecord = {
+                member1,
+                member2,
+                result,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),
+                event_name: eventName,
+                member1_rating_before: member1Rating,
+                member2_rating_before: member2Rating
+            };
+
+            // 根据结果计算积分变化
+            let member1Change, member2Change, logText;
+
+            if (result === 'member1_win') {
+                // 成员1获胜
+                member1Change = calculateRatingChange(member1Rating, member2Rating, 1);
+                member2Change = calculateRatingChange(member2Rating, member1Rating, 0);
+                logText = `${member1} 战胜了 ${member2}`;
+            } else if (result === 'member2_win') {
+                // 成员2获胜
+                member1Change = calculateRatingChange(member1Rating, member2Rating, 0);
+                member2Change = calculateRatingChange(member2Rating, member1Rating, 1);
+                logText = `${member2} 战胜了 ${member1}`;
+            } else if (result === 'draw') { // 平局
+                member1Change = calculateRatingChange(member1Rating, member2Rating, 0.5);
+                member2Change = calculateRatingChange(member2Rating, member1Rating, 0.5);
+                logText = `${member1} 与 ${member2} 战平`;
+            } else if (result === 'forfeit1') { // 成员1弃权
+                member1Change = calculateRatingChange(member1Rating, member2Rating, 0);
+                member2Change = calculateRatingChange(member2Rating, member1Rating, 1);
+                logText = `${member1} 弃权，${member2} 获胜`;
+            } else if (result === 'forfeit2') { // 成员2弃权
+                member1Change = calculateRatingChange(member1Rating, member2Rating, 1);
+                member2Change = calculateRatingChange(member2Rating, member1Rating, 0);
+                logText = `${member2} 弃权，${member1} 获胜`;
+            }
+
+            // 更新积分
+            members[member1] += member1Change;
+            members[member2] += member2Change;
+
+            // 记录积分变化
+            battleRecord.member1_change = member1Change;
+            battleRecord.member2_change = member2Change;
+            battleRecord.member1_rating_after = members[member1];
+            battleRecord.member2_rating_after = members[member2];
+
+            // 保存对战记录
+            battleHistory.push(battleRecord);
+
+            // 保存数据
+            saveData();
+
+            // 更新显示
+            updateMemberLists();
+            updateRanking();
+            updateMemberScores();
+
+            // 记录对战日志
+            const battleLog = document.getElementById('battleLog');
+            logText += ` (${member1}: ${member1Change > 0 ? '+' : ''}${member1Change}, ${member2}: ${member2Change > 0 ? '+' : ''}${member2Change})`;
+            battleLog.textContent += `${battleRecord.date} - [${eventName}] ${logText}\n`;
+            battleLog.scrollTop = battleLog.scrollHeight;
+
+            alert('对战结果已记录');
+        }
+
+        // 全选成员
+        function selectAllMembers() {
+            const checkboxes = document.querySelectorAll('#memberSelectList input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+
+        // 生成平衡的比赛日程
+        function generateBalancedSchedule(groupMembers) {
+            // 生成所有可能的比赛组合
+            const matches = [];
+            for (let i = 0; i < groupMembers.length; i++) {
+                for (let j = i + 1; j < groupMembers.length; j++) {
+                    matches.push([groupMembers[i], groupMembers[j]]);
+                }
+            }
+
+            // 如果比赛场次少，直接返回
+            if (matches.length <= 3) {
+                return matches;
+            }
+
+            // 创建一个字典来跟踪每个成员的比赛间隔
+            const playerLastMatch = {};
+            groupMembers.forEach(player => {
+                playerLastMatch[player] = -1;
+            });
+
+            // 生成平衡的比赛日程
+            const schedule = [];
+            const remainingMatches = [...matches];
+            let roundNum = 0;
+
+            while (remainingMatches.length > 0) {
+                // 找出可以安排在这一轮比赛的场次
+                let availableMatches = [];
+                for (const match of remainingMatches) {
+                    const [player1, player2] = match;
+                    // 检查两个球员是否都在上一轮比赛中
+                    if (playerLastMatch[player1] < roundNum - 1 && playerLastMatch[player2] < roundNum - 1) {
+                        availableMatches.push(match);
+                    }
+                }
+
+                // 如果没有合适的比赛，放宽条件
+                if (availableMatches.length === 0) {
+                    for (const match of remainingMatches) {
+                        const [player1, player2] = match;
+                        // 至少确保一个球员没有在上一轮比赛
+                        if (playerLastMatch[player1] < roundNum || playerLastMatch[player2] < roundNum) {
+                            availableMatches.push(match);
+                        }
+                    }
+                }
+
+                // 如果仍然没有合适的比赛，选择第一场
+                if (availableMatches.length === 0) {
+                    availableMatches = [remainingMatches[0]];
+                }
+
+                // 从可用的比赛中随机选择一场
+                const selectedMatch = availableMatches[Math.floor(Math.random() * availableMatches.length)];
+                schedule.push(selectedMatch);
+                const index = remainingMatches.indexOf(selectedMatch);
+                if (index !== -1) {
+                    remainingMatches.splice(index, 1);
+                }
+
+                // 更新球员的最后比赛轮次
+                const [player1, player2] = selectedMatch;
+                playerLastMatch[player1] = roundNum;
+                playerLastMatch[player2] = roundNum;
+
+                roundNum++;
+            }
+
+            return schedule;
+        }
+
+        // 创建比赛
+        function createTournament() {
+            const tournamentName = document.getElementById('tournamentName').value.trim();
+            if (!tournamentName) {
+                alert('请输入比赛名称');
+                return;
+            }
+
+            // 获取选中的成员
+            const checkboxes = document.querySelectorAll('#memberSelectList input[type="checkbox"]:checked');
+            if (checkboxes.length < 3) {
+                alert('至少选择3名成员');
+                return;
+            }
+
+            const selectedMembers = Array.from(checkboxes).map(cb => cb.getAttribute('data-name'));
+
+            // 获取每组人数和晋级人数
+            const groupSize = parseInt(document.getElementById('groupSize').value);
+            const advanceCount = parseInt(document.getElementById('advanceCount').value);
+
+            // 检查晋级人数是否合理
+            if (advanceCount >= groupSize) {
+                alert('晋级人数不能大于或等于小组人数');
+                return;
+            }
+
+            // 随机打乱成员顺序
+            const shuffledMembers = [...selectedMembers].sort(() => Math.random() - 0.5);
+
+            // 分组
+            const groups = [];
+            for (let i = 0; i < shuffledMembers.length; i += groupSize) {
+                const group = shuffledMembers.slice(i, i + groupSize);
+                groups.push(group);
+            }
+
+            // 如果最后一组人数不足，将其合并到前一组
+            if (groups.length > 1 && groups[groups.length - 1].length < groupSize - 1) {
+                const lastGroup = groups.pop();
+                groups[groups.length - 1].push(...lastGroup);
+            }
+
+            // 生成分组显示文本
+            let displayText = `比赛名称: ${tournamentName}\n`;
+            displayText += `参赛人数: ${selectedMembers.length}\n`;
+            displayText += `分组数量: ${groups.length}\n`;
+            displayText += `每组人数: ${groupSize}\n`;
+            displayText += `每组晋级人数: ${advanceCount}\n\n`;
+
+            groups.forEach((group, i) => {
+                displayText += `第 ${i + 1} 组:\n`;
+                group.forEach((member, j) => {
+                    displayText += `  ${j + 1}. ${member} (积分: ${members[member]})\n`;
+                });
+                displayText += "\n";
+            });
+
+            // 生成小组赛对阵表
+            displayText += "小组赛对阵安排:\n";
+            groups.forEach((group, i) => {
+                displayText += `\n第 ${i + 1} 组对阵:\n`;
+                // 生成平衡的比赛日程
+                const schedule = generateBalancedSchedule(group);
+                for (let j = 0; j < schedule.length; j++) {
+                    displayText += `  第${j + 1}场: ${schedule[j][0]} vs ${schedule[j][1]}\n`;
+                }
+            });
+
+            // 显示分组情况
+            document.getElementById('groupDisplay').textContent = displayText;
+
+            // 保存比赛记录
+            const tournament = {
+                name: tournamentName,
+                participants: selectedMembers,
+                groups: groups,
+                group_size: groupSize,
+                advance_count: advanceCount,
+                timestamp: new Date().toISOString(),
+                status: 'created'  // 比赛状态：created, group_stage, knockout_stage, finished
+            };
+            tournaments.push(tournament);
+
+            // 更新比赛列表
+            updateTournamentLists();
+
+            alert(`比赛 '${tournamentName}' 已创建，共分为 ${groups.length} 组`);
+        }
+
+        // 进入比赛
+        function enterTournament() {
+            const tournamentName = document.getElementById('tournamentSelect').value;
+            if (!tournamentName) {
+                alert('请选择比赛');
+                return;
+            }
+
+            // 查找比赛
+            currentTournament = tournaments.find(t => t.name === tournamentName);
+            if (!currentTournament) {
+                alert('未找到选择的比赛');
+                return;
+            }
+
+            // 更新比赛对战页面显示
+            document.getElementById('currentTournamentName').textContent = `当前比赛: ${tournamentName}`;
+            
+            // 显示冠军信息
+            updateChampionDisplay();
+            
+            // 显示或隐藏生成淘汰赛按钮
+            if (currentTournament.status === 'created' || currentTournament.status === 'group_stage') {
+                document.getElementById('generateKnockoutBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('generateKnockoutBtn').style.display = 'none';
+            }
+            
+            setupGroupStageDisplay();
+
+            // 切换到比赛对战页面
+            switchTab('tournament-battle');
+
+            alert(`已进入比赛: ${tournamentName}`);
+        }
+
+        // 更新冠军显示
+        function updateChampionDisplay() {
+            const championDisplay = document.getElementById('championDisplay');
+            if (currentTournament.champion) {
+                championDisplay.style.display = 'block';
+                championDisplay.textContent = `🏆 冠军: ${currentTournament.champion} 🏆`;
+            } else {
+                championDisplay.style.display = 'none';
+            }
+        }
+
+        // 计算小组赛统计数据 - 修改为新的计分规则
+        function calculateGroupStats(groupMembers, tournamentName) {
+            const stats = {};
+
+            // 初始化统计
+            groupMembers.forEach(member => {
+                stats[member] = {
+                    points: 0,
+                    wins: 0,
+                    losses: 0,
+                    forfeits: 0,
+                    games_won: 0,
+                    games_lost: 0
+                };
+            });
+
+            // 查找该小组的所有对战记录
+            battleHistory.forEach(battle => {
+                if (battle.event_name === tournamentName &&
+                    groupMembers.includes(battle.member1) &&
+                    groupMembers.includes(battle.member2)) {
+
+                    if (battle.result === 'member1_win') {
+                        // 成员1获胜
+                        if (battle.score === '2-0') {
+                            stats[battle.member1].points += 3; // 2-0胜利计3分
+                            stats[battle.member2].points += 1; // 输掉比赛计1分
+                        } else if (battle.score === '2-1') {
+                            stats[battle.member1].points += 2; // 2-1胜利计2分
+                            stats[battle.member2].points += 1; // 输掉比赛计1分
+                        }
+                        stats[battle.member1].wins += 1;
+                        stats[battle.member2].losses += 1;
+                        
+                        // 记录局数
+                        if (battle.score === '2-0') {
+                            stats[battle.member1].games_won += 2;
+                            stats[battle.member2].games_lost += 2;
+                        } else if (battle.score === '2-1') {
+                            stats[battle.member1].games_won += 2;
+                            stats[battle.member1].games_lost += 1;
+                            stats[battle.member2].games_won += 1;
+                            stats[battle.member2].games_lost += 2;
+                        }
+                    } else if (battle.result === 'member2_win') {
+                        // 成员2获胜
+                        if (battle.score === '2-0') {
+                            stats[battle.member2].points += 3; // 2-0胜利计3分
+                            stats[battle.member1].points += 1; // 输掉比赛计1分
+                        } else if (battle.score === '2-1') {
+                            stats[battle.member2].points += 2; // 2-1胜利计2分
+                            stats[battle.member1].points += 1; // 输掉比赛计1分
+                        }
+                        stats[battle.member2].wins += 1;
+                        stats[battle.member1].losses += 1;
+                        
+                        // 记录局数
+                        if (battle.score === '2-0') {
+                            stats[battle.member2].games_won += 2;
+                            stats[battle.member1].games_lost += 2;
+                        } else if (battle.score === '2-1') {
+                            stats[battle.member2].games_won += 2;
+                            stats[battle.member2].games_lost += 1;
+                            stats[battle.member1].games_won += 1;
+                            stats[battle.member1].games_lost += 2;
+                        }
+                    } else if (battle.result === 'forfeit1') {
+                        // 成员1弃权
+                        stats[battle.member1].forfeits += 1;
+                        stats[battle.member2].points += 3; // 弃权胜利计3分
+                        stats[battle.member2].wins += 1;
+                        stats[battle.member2].games_won += 2;
+                        stats[battle.member1].games_lost += 2;
+                    } else if (battle.result === 'forfeit2') {
+                        // 成员2弃权
+                        stats[battle.member2].forfeits += 1;
+                        stats[battle.member1].points += 3; // 弃权胜利计3分
+                        stats[battle.member1].wins += 1;
+                        stats[battle.member1].games_won += 2;
+                        stats[battle.member2].games_lost += 2;
+                    }
+                    // 平局不计分
+                }
+            });
+
+            return stats;
+        }
+
+        // 检查比赛是否已经进行过
+        function hasMatchBeenPlayed(player1, player2, tournamentName) {
+            return battleHistory.some(battle => 
+                battle.event_name === tournamentName &&
+                ((battle.member1 === player1 && battle.member2 === player2) ||
+                 (battle.member1 === player2 && battle.member2 === player1))
+            );
+        }
+
+        // 获取比赛结果
+        function getMatchResult(player1, player2, tournamentName) {
+            const battle = battleHistory.find(b => 
+                b.event_name === tournamentName &&
+                ((b.member1 === player1 && b.member2 === player2) ||
+                 (b.member1 === player2 && b.member2 === player1))
+            );
+
+            if (!battle) return '未知';
+
+            if (battle.result === 'member1_win') {
+                if (battle.member1 === player1) return `${player1} 胜 (${battle.score})`;
+                else return `${player2} 胜 (${battle.score})`;
+            } else if (battle.result === 'member2_win') {
+                if (battle.member2 === player1) return `${player1} 胜 (${battle.score})`;
+                else return `${player2} 胜 (${battle.score})`;
+            } else if (battle.result === 'draw') {
+                return '平局';
+            } else if (battle.result === 'forfeit1') {
+                if (battle.member1 === player1) return `${player1} 弃权`;
+                else return `${player2} 弃权`;
+            } else if (battle.result === 'forfeit2') {
+                if (battle.member2 === player1) return `${player1} 弃权`;
+                else return `${player2} 弃权`;
+            }
+        }
+
+        // 获取对战记录
+        function getBattleRecord(player1, player2, tournamentName) {
+            return battleHistory.find(b => 
+                b.event_name === tournamentName &&
+                ((b.member1 === player1 && b.member2 === player2) ||
+                 (b.member1 === player2 && b.member2 === player1))
+            );
+        }
+
+        // 设置小组赛显示
+        function setupGroupStageDisplay() {
+            const groupStageContent = document.getElementById('groupStageContent');
+            groupStageContent.innerHTML = '';
+
+            if (!currentTournament) {
+                groupStageContent.innerHTML = '<p>请先选择并进入一个比赛</p>';
+                return;
+            }
+
+            // 创建分组选项卡
+            const groupTabs = document.createElement('div');
+            groupTabs.className = 'group-tabs';
+            groupStageContent.appendChild(groupTabs);
+
+            // 创建分组内容容器
+            const groupContents = document.createElement('div');
+            groupContents.className = 'group-contents';
+            groupStageContent.appendChild(groupContents);
+
+            // 为每个小组创建选项卡和内容
+            currentTournament.groups.forEach((group, groupIndex) => {
+                // 创建选项卡
+                const groupTab = document.createElement('button');
+                groupTab.className = 'group-tab';
+                if (groupIndex === 0) groupTab.classList.add('active');
+                groupTab.textContent = `第 ${groupIndex + 1} 组`;
+                groupTab.addEventListener('click', () => {
+                    // 激活当前选项卡
+                    document.querySelectorAll('.group-tab').forEach(tab => tab.classList.remove('active'));
+                    groupTab.classList.add('active');
+                    
+                    // 显示当前分组内容
+                    document.querySelectorAll('.group-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(`groupContent${groupIndex}`).classList.add('active');
+                    
+                    currentGroupIndex = groupIndex;
+                });
+                groupTabs.appendChild(groupTab);
+
+                // 创建分组内容
+                const groupContent = document.createElement('div');
+                groupContent.className = 'group-content';
+                groupContent.id = `groupContent${groupIndex}`;
+                if (groupIndex === 0) groupContent.classList.add('active');
+                groupContents.appendChild(groupContent);
+
+                // 小组积分榜
+                const statsHeader = document.createElement('h4');
+                statsHeader.textContent = '小组积分榜:';
+                groupContent.appendChild(statsHeader);
+
+                const statsTable = document.createElement('table');
+                statsTable.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>姓名</th>
+                            <th>积分</th>
+                            <th>胜场</th>
+                            <th>负场</th>
+                            <th>弃权</th>
+                            <th>胜局</th>
+                            <th>负局</th>
+                        </tr>
+                    </thead>
+                    <tbody id="groupStats${groupIndex}">
+                    </tbody>
+                `;
+                groupContent.appendChild(statsTable);
+
+                // 计算小组积分
+                const groupStats = calculateGroupStats(group, currentTournament.name);
+
+                // 按积分排序
+                const sortedStats = Object.entries(groupStats)
+                    .sort((a, b) => {
+                        // 先按积分排序
+                        if (b[1].points !== a[1].points) {
+                            return b[1].points - a[1].points;
+                        }
+                        // 积分相同按胜局数排序
+                        if (b[1].games_won !== a[1].games_won) {
+                            return b[1].games_won - a[1].games_won;
+                        }
+                        // 胜局数相同按净胜局排序
+                        const netGamesA = a[1].games_won - a[1].games_lost;
+                        const netGamesB = b[1].games_won - b[1].games_lost;
+                        return netGamesB - netGamesA;
+                    });
+
+                // 添加排名数据
+                const statsBody = document.getElementById(`groupStats${groupIndex}`);
+                sortedStats.forEach(([name, stats], rank) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${rank + 1}</td>
+                        <td>${name}</td>
+                        <td>${stats.points}</td>
+                        <td>${stats.wins}</td>
+                        <td>${stats.losses}</td>
+                        <td>${stats.forfeits}</td>
+                        <td>${stats.games_won}</td>
+                        <td>${stats.games_lost}</td>
+                    `;
+                    statsBody.appendChild(row);
+                });
+
+                // 小组对阵
+                const matchesHeader = document.createElement('h4');
+                matchesHeader.textContent = '小组对阵:';
+                groupContent.appendChild(matchesHeader);
+
+                const matchesDiv = document.createElement('div');
+                matchesDiv.className = 'matches-list';
+                groupContent.appendChild(matchesDiv);
+
+                // 生成所有可能的对战组合
+                const matches = [];
+                for (let i = 0; i < group.length; i++) {
+                    for (let j = i + 1; j < group.length; j++) {
+                        matches.push([group[i], group[j]]);
+                    }
+                }
+
+                // 分离已完成和未完成的比赛
+                const availableMatches = []; // 未完成的比赛
+                const completedMatches = []; // 已完成的比赛
+
+                matches.forEach(match => {
+                    const [player1, player2] = match;
+                    if (hasMatchBeenPlayed(player1, player2, currentTournament.name)) {
+                        completedMatches.push(match);
+                    } else {
+                        availableMatches.push(match);
+                    }
+                });
+
+                // 显示未完成的比赛
+                if (availableMatches.length > 0) {
+                    const availableHeader = document.createElement('h5');
+                    availableHeader.textContent = '未完成的比赛:';
+                    matchesDiv.appendChild(availableHeader);
+
+                    availableMatches.forEach(match => {
+                        const [player1, player2] = match;
+                        const matchItem = document.createElement('div');
+                        matchItem.className = 'match-item';
+                        matchItem.innerHTML = `
+                            <span>${player1} vs ${player2}</span>
+                            <div class="match-actions">
+                                <button class="success" data-action="record" data-player1="${player1}" data-player2="${player2}">记录结果</button>
+                            </div>
+                        `;
+                        matchesDiv.appendChild(matchItem);
+                    });
+                }
+
+                // 显示已完成的比赛
+                if (completedMatches.length > 0) {
+                    const completedHeader = document.createElement('h5');
+                    completedHeader.textContent = '已完成的比赛:';
+                    matchesDiv.appendChild(completedHeader);
+
+                    completedMatches.forEach(match => {
+                        const [player1, player2] = match;
+                        const result = getMatchResult(player1, player2, currentTournament.name);
+                        const matchItem = document.createElement('div');
+                        matchItem.className = 'match-item completed';
+                        matchItem.innerHTML = `
+                            <span>${player1} vs ${player2} (${result})</span>
+                            <div class="match-actions">
+                                <button class="warning" data-action="modify" data-player1="${player1}" data-player2="${player2}">修改结果</button>
+                                <button class="danger" data-action="delete" data-player1="${player1}" data-player2="${player2}">删除记录</button>
+                            </div>
+                        `;
+                        matchesDiv.appendChild(matchItem);
+                    });
+                }
+            });
+
+            // 为所有按钮添加事件监听器
+            document.querySelectorAll('.match-actions button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const player1 = this.getAttribute('data-player1');
+                    const player2 = this.getAttribute('data-player2');
+                    
+                    if (action === 'record') {
+                        openBattleModal(player1, player2, null, false);
+                    } else if (action === 'modify') {
+                        openBattleModal(player1, player2, null, true);
+                    } else if (action === 'delete') {
+                        deleteBattleRecord(player1, player2);
+                    }
+                });
+            });
+        }
+
+        // 打开对战记录模态框 - 增加比分选择
+        function openBattleModal(player1, player2, group, isModify = false) {
+            document.getElementById('battleModalTitle').textContent = isModify ? '修改比赛结果' : '记录比赛对战结果';
+            document.getElementById('battlePlayers').textContent = `${player1} vs ${player2}`;
+            
+            // 设置比分选项
+            const resultOptions = document.getElementById('battleResultOptions');
+            resultOptions.innerHTML = `
+                <div class="score-option" data-result="member1_win" data-score="2-0">
+                    <input type="radio" name="tournamentBattleResult" value="member1_win" data-score="2-0" style="display: none;">
+                    <span>${player1} 获胜 (2-0)</span>
+                    <span class="score-display">胜方: 3分 | 负方: 1分</span>
+                </div>
+                <div class="score-option" data-result="member1_win" data-score="2-1">
+                    <input type="radio" name="tournamentBattleResult" value="member1_win" data-score="2-1" style="display: none;">
+                    <span>${player1} 获胜 (2-1)</span>
+                    <span class="score-display">胜方: 2分 | 负方: 1分</span>
+                </div>
+                <div class="score-option" data-result="member2_win" data-score="2-0">
+                    <input type="radio" name="tournamentBattleResult" value="member2_win" data-score="2-0" style="display: none;">
+                    <span>${player2} 获胜 (2-0)</span>
+                    <span class="score-display">胜方: 3分 | 负方: 1分</span>
+                </div>
+                <div class="score-option" data-result="member2_win" data-score="2-1">
+                    <input type="radio" name="tournamentBattleResult" value="member2_win" data-score="2-1" style="display: none;">
+                    <span>${player2} 获胜 (2-1)</span>
+                    <span class="score-display">胜方: 2分 | 负方: 1分</span>
+                </div>
+                <div class="score-option" data-result="forfeit1" data-score="弃权">
+                    <input type="radio" name="tournamentBattleResult" value="forfeit1" data-score="弃权" style="display: none;">
+                    <span>${player1} 弃权</span>
+                    <span class="score-display">胜方: 3分 | 负方: 0分</span>
+                </div>
+                <div class="score-option" data-result="forfeit2" data-score="弃权">
+                    <input type="radio" name="tournamentBattleResult" value="forfeit2" data-score="弃权" style="display: none;">
+                    <span>${player2} 弃权</span>
+                    <span class="score-display">胜方: 3分 | 负方: 0分</span>
+                </div>
+            `;
+            
+            // 添加点击事件
+            document.querySelectorAll('.score-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选中状态
+                    document.querySelectorAll('.score-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    // 添加当前选中状态
+                    this.classList.add('selected');
+                    // 选中对应的单选按钮
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                });
+            });
+            
+            // 如果是修改模式，设置当前结果
+            if (isModify) {
+                const battleRecord = getBattleRecord(player1, player2, currentTournament.name);
+                if (battleRecord) {
+                    const result = battleRecord.result;
+                    const score = battleRecord.score || '2-0';
+                    
+                    // 找到对应的选项并选中
+                    const option = document.querySelector(`.score-option[data-result="${result}"][data-score="${score}"]`);
+                    if (option) {
+                        option.classList.add('selected');
+                        const radio = option.querySelector('input[type="radio"]');
+                        radio.checked = true;
+                    }
+                }
+                document.getElementById('deleteBattle').style.display = 'inline-block';
+            } else {
+                document.getElementById('deleteBattle').style.display = 'none';
+            }
+            
+            // 存储当前对战信息
+            window.currentBattle = { player1, player2, group, isModify };
+            window.currentKnockout = null; // 确保这是小组赛
+            
+            document.getElementById('battleResultModal').style.display = 'flex';
+        }
+
+        // 确认对战结果
+        function confirmBattleResult() {
+            const selectedOption = document.querySelector('.score-option.selected');
+            if (!selectedOption) {
+                alert('请选择比赛结果');
+                return;
+            }
+            
+            const result = selectedOption.getAttribute('data-result');
+            const score = selectedOption.getAttribute('data-score');
+            
+            // 处理小组赛结果
+            if (window.currentBattle) {
+                const { player1, player2, group, isModify } = window.currentBattle;
+                const eventName = currentTournament.name;
+
+                // 如果是修改模式，先删除原来的记录
+                if (isModify) {
+                    deleteBattleRecord(player1, player2, false);
+                }
+
+                // 获取当前积分
+                const player1Rating = members[player1];
+                const player2Rating = members[player2];
+
+                // 创建对战记录
+                const battleRecord = {
+                    member1: player1,
+                    member2: player2,
+                    result: result,
+                    score: score,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),
+                    event_name: eventName,
+                    member1_rating_before: player1Rating,
+                    member2_rating_before: player2Rating
+                };
+
+                // 根据结果计算积分变化
+                let player1Change, player2Change;
+
+                if (result === 'member1_win') {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 1);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 0);
+                } else if (result === 'member2_win') {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 0);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 1);
+                } else if (result === 'forfeit1') {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 0);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 1);
+                } else if (result === 'forfeit2') {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 1);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 0);
+                }
+
+                // 更新积分
+                members[player1] += player1Change;
+                members[player2] += player2Change;
+
+                // 记录积分变化
+                battleRecord.member1_change = player1Change;
+                battleRecord.member2_change = player2Change;
+                battleRecord.member1_rating_after = members[player1];
+                battleRecord.member2_rating_after = members[player2];
+
+                // 保存对战记录
+                battleHistory.push(battleRecord);
+
+                // 更新比赛状态
+                if (currentTournament.status === 'created') {
+                    currentTournament.status = 'group_stage';
+                }
+
+                // 保存数据
+                saveData();
+
+                // 更新显示
+                updateMemberLists();
+                updateRanking();
+                setupGroupStageDisplay();
+
+                document.getElementById('battleResultModal').style.display = 'none';
+                alert(isModify ? '比赛结果已修改' : '比赛对战结果已记录');
+            }
+            // 处理淘汰赛结果
+            else if (window.currentKnockout) {
+                const { roundName, player1, player2, isModify } = window.currentKnockout;
+                const winner = result === 'member1_win' ? player1 : player2;
+                const eventName = currentTournament.name + " - " + roundName;
+
+                // 如果是修改模式，先删除原来的记录
+                if (isModify) {
+                    deleteBattleRecord(player1, player2, false);
+                }
+
+                // 获取当前积分
+                const player1Rating = members[player1];
+                const player2Rating = members[player2];
+
+                // 创建对战记录
+                const battleRecord = {
+                    member1: player1,
+                    member2: player2,
+                    result: result,
+                    score: score,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),
+                    event_name: eventName,
+                    member1_rating_before: player1Rating,
+                    member2_rating_before: player2Rating
+                };
+
+                // 根据结果计算积分变化
+                let player1Change, player2Change;
+
+                if (result === 'member1_win') {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 1);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 0);
+                } else {
+                    player1Change = calculateRatingChange(player1Rating, player2Rating, 0);
+                    player2Change = calculateRatingChange(player2Rating, player1Rating, 1);
+                }
+
+                // 更新积分
+                members[player1] += player1Change;
+                members[player2] += player2Change;
+
+                // 记录积分变化
+                battleRecord.member1_change = player1Change;
+                battleRecord.member2_change = player2Change;
+                battleRecord.member1_rating_after = members[player1];
+                battleRecord.member2_rating_after = members[player2];
+
+                // 保存对战记录
+                battleHistory.push(battleRecord);
+
+                // 更新淘汰赛对阵
+                const bracket = currentTournament.knockout_bracket;
+                for (const match of bracket[roundName]) {
+                    if (match.player1 === player1 && match.player2 === player2) {
+                        match.completed = true;
+                        match.winner = winner;
+                        break;
+                    }
+                }
+
+                // 检查是否所有比赛都已完成
+                const allCompleted = bracket[roundName].every(match => match.completed);
+
+                if (allCompleted) {
+                    // 生成下一轮淘汰赛
+                    const nextRoundWinners = bracket[roundName].map(match => match.winner);
+
+                    if (nextRoundWinners.length > 1) {
+                        // 确定下一轮名称
+                        let nextRoundName;
+                        if (nextRoundWinners.length === 2) {
+                            nextRoundName = "决赛";
+                        } else if (nextRoundWinners.length === 4) {
+                            nextRoundName = "半决赛";
+                        } else {
+                            nextRoundName = `${nextRoundWinners.length}强赛`;
+                        }
+
+                        // 生成下一轮对阵
+                        const nextMatches = [];
+                        for (let i = 0; i < nextRoundWinners.length; i += 2) {
+                            if (i + 1 < nextRoundWinners.length) {
+                                nextMatches.push({
+                                    player1: nextRoundWinners[i],
+                                    player2: nextRoundWinners[i + 1],
+                                    completed: false,
+                                    winner: null
+                                });
+                            }
+                        }
+
+                        bracket[nextRoundName] = nextMatches;
+
+                        // 如果是决赛且已完成，则比赛结束
+                        if (nextRoundName === "决赛" && nextMatches.length === 1 && nextMatches[0].completed) {
+                            currentTournament.status = "finished";
+                            currentTournament.champion = nextMatches[0].winner;
+                            // 设置亚军
+                            const finalMatch = nextMatches[0];
+                            currentTournament.runnerUp = finalMatch.winner === finalMatch.player1 ? finalMatch.player2 : finalMatch.player1;
+                            
+                            // 生成季军赛
+                            if (bracket['半决赛'] && bracket['半决赛'].length === 2) {
+                                const semiFinalLosers = bracket['半决赛'].map(match => 
+                                    match.winner === match.player1 ? match.player2 : match.player1
+                                );
+                                
+                                bracket['季军赛'] = [{
+                                    player1: semiFinalLosers[0],
+                                    player2: semiFinalLosers[1],
+                                    completed: false,
+                                    winner: null
+                                }];
+                            }
+                            updateChampionDisplay();
+                        }
+                    }
+                }
+
+                // 如果是季军赛完成，记录季军
+                if (roundName === '季军赛' && allCompleted) {
+                    currentTournament.thirdPlace = winner;
+                }
+
+                // 保存数据
+                saveData();
+
+                // 更新显示
+                updateMemberLists();
+                updateRanking();
+                setupKnockoutStageDisplay();
+
+                document.getElementById('battleResultModal').style.display = 'none';
+                alert(isModify ? '淘汰赛结果已修改' : `淘汰赛结果已记录，${winner} 晋级`);
+            }
+        }
+
+        // 删除对战记录
+        function deleteBattleRecord(player1, player2, showAlert = true) {
+            if (!confirm('确定要删除这条对战记录吗？')) {
+                return;
+            }
+
+            // 查找对战记录
+            const battleIndex = battleHistory.findIndex(battle => 
+                battle.event_name === currentTournament.name &&
+                ((battle.member1 === player1 && battle.member2 === player2) ||
+                 (battle.member1 === player2 && battle.member2 === player1))
+            );
+
+            if (battleIndex !== -1) {
+                const battle = battleHistory[battleIndex];
+                
+                // 撤销积分变化
+                members[battle.member1] = battle.member1_rating_before;
+                members[battle.member2] = battle.member2_rating_before;
+                
+                // 删除对战记录
+                battleHistory.splice(battleIndex, 1);
+                
+                // 更新淘汰赛状态（如果是淘汰赛）
+                if (currentTournament.knockout_bracket) {
+                    Object.entries(currentTournament.knockout_bracket).forEach(([roundName, matches]) => {
+                        matches.forEach(match => {
+                            if (match.player1 === player1 && match.player2 === player2) {
+                                match.completed = false;
+                                match.winner = null;
+                            }
+                        });
+                    });
+                    
+                    // 重置冠军、亚军和季军
+                    currentTournament.champion = null;
+                    currentTournament.runnerUp = null;
+                    currentTournament.thirdPlace = null;
+                    updateChampionDisplay();
+                }
+                
+                // 保存数据
+                saveData();
+                
+                // 更新显示
+                updateMemberLists();
+                updateRanking();
+                setupGroupStageDisplay();
+                setupKnockoutStageDisplay();
+                
+                if (showAlert) {
+                    alert('对战记录已删除');
+                }
+                
+                document.getElementById('battleResultModal').style.display = 'none';
+            }
+        }
+
+        // 生成淘汰赛阶段 - 修改为根据晋级人数自动生成
+        function generateKnockoutStage() {
+            if (!currentTournament) {
+                alert('没有当前比赛');
+                return;
+            }
+
+            // 获取每个小组的晋级选手
+            const advancePlayers = [];
+            currentTournament.groups.forEach(group => {
+                const groupStats = calculateGroupStats(group, currentTournament.name);
+                if (!groupStats) {
+                    alert('小组赛数据不完整');
+                    return;
+                }
+
+                // 按积分排序
+                const sortedStats = Object.entries(groupStats)
+                    .sort((a, b) => {
+                        // 先按积分排序
+                        if (b[1].points !== a[1].points) {
+                            return b[1].points - a[1].points;
+                        }
+                        // 积分相同按胜局数排序
+                        if (b[1].games_won !== a[1].games_won) {
+                            return b[1].games_won - a[1].games_won;
+                        }
+                        // 胜局数相同按净胜局排序
+                        const netGamesA = a[1].games_won - a[1].games_lost;
+                        const netGamesB = b[1].games_won - b[1].games_lost;
+                        return netGamesB - netGamesA;
+                    });
+                
+                // 取前advance_count名
+                for (let i = 0; i < Math.min(currentTournament.advance_count, sortedStats.length); i++) {
+                    advancePlayers.push(sortedStats[i][0]);
+                }
+            });
+
+            // 检查是否有足够的晋级选手
+            if (advancePlayers.length < 2) {
+                alert('小组赛尚未完成或晋级选手不足');
+                return;
+            }
+
+            // 随机打乱晋级选手顺序
+            const shuffledPlayers = [...advancePlayers].sort(() => Math.random() - 0.5);
+
+            // 计算需要轮空的选手数量
+            const totalPlayers = shuffledPlayers.length;
+            const nextPowerOfTwo = Math.pow(2, Math.ceil(Math.log2(totalPlayers)));
+            const byes = nextPowerOfTwo - totalPlayers;
+
+            // 生成淘汰赛对阵
+            const knockoutBracket = {};
+            let roundName;
+
+            if (totalPlayers <= 4) {
+                roundName = "半决赛";
+            } else if (totalPlayers <= 8) {
+                roundName = "八强赛";
+            } else if (totalPlayers <= 16) {
+                roundName = "十六强赛";
+            } else {
+                roundName = "三十二强赛";
+            }
+
+            // 创建第一轮对阵
+            const firstRoundMatches = [];
+            let playersLeft = [...shuffledPlayers];
+            
+            // 如果有轮空，随机选择轮空选手
+            if (byes > 0) {
+                const byePlayers = playersLeft.splice(0, byes);
+                // 轮空选手直接晋级下一轮
+                knockoutBracket["轮空晋级"] = byePlayers.map(player => ({
+                    player: player,
+                    type: "bye"
+                }));
+            }
+
+            // 创建对阵
+            for (let i = 0; i < playersLeft.length; i += 2) {
+                if (i + 1 < playersLeft.length) {
+                    firstRoundMatches.push({
+                        player1: playersLeft[i],
+                        player2: playersLeft[i + 1],
+                        completed: false,
+                        winner: null
+                    });
+                }
+            }
+
+            knockoutBracket[roundName] = firstRoundMatches;
+
+            // 更新比赛状态和淘汰赛对阵
+            currentTournament.status = 'knockout_stage';
+            currentTournament.knockout_bracket = knockoutBracket;
+
+            // 保存数据
+            saveData();
+
+            // 更新显示
+            document.getElementById('generateKnockoutBtn').style.display = 'none';
+            setupKnockoutStageDisplay();
+
+            alert(`淘汰赛已生成，共${totalPlayers}名选手晋级${byes > 0 ? `，其中${byes}名选手轮空` : ''}`);
+        }
+
+        // 设置淘汰赛显示
+        function setupKnockoutStageDisplay() {
+            const knockoutStageContent = document.getElementById('knockoutStageContent');
+            knockoutStageContent.innerHTML = '';
+
+            if (!currentTournament || !currentTournament.knockout_bracket) {
+                knockoutStageContent.innerHTML = '<p>淘汰赛尚未生成</p>';
+                return;
+            }
+
+            // 创建淘汰赛树形视图
+            const knockoutTable = document.createElement('table');
+            knockoutTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>轮次</th>
+                        <th>对阵</th>
+                        <th>状态</th>
+                        <th>胜者</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="knockoutBody">
+                </tbody>
+            `;
+            knockoutStageContent.appendChild(knockoutTable);
+
+            // 添加淘汰赛数据
+            const knockoutBody = document.getElementById('knockoutBody');
+            Object.entries(currentTournament.knockout_bracket).forEach(([roundName, matches]) => {
+                // 处理轮空情况
+                if (roundName === "轮空晋级") {
+                    matches.forEach(match => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>轮空</td>
+                            <td>${match.player} (轮空)</td>
+                            <td>已晋级</td>
+                            <td>${match.player}</td>
+                            <td class="match-actions">轮空</td>
+                        `;
+                        knockoutBody.appendChild(row);
+                    });
+                } else {
+                    matches.forEach(match => {
+                        const row = document.createElement('tr');
+                        const status = match.completed ? '已完成' : '未开始';
+                        const winner = match.completed ? match.winner : '待定';
+                        
+                        row.innerHTML = `
+                            <td>${roundName}</td>
+                            <td>${match.player1} vs ${match.player2}</td>
+                            <td>${status}</td>
+                            <td>${winner}</td>
+                            <td class="match-actions">
+                                ${match.completed ? 
+                                    `<button class="warning" data-action="modify" data-round="${roundName}" data-player1="${match.player1}" data-player2="${match.player2}">修改</button>
+                                     <button class="danger" data-action="delete" data-player1="${match.player1}" data-player2="${match.player2}">删除</button>` :
+                                    `<button class="success" data-action="record" data-round="${roundName}" data-player1="${match.player1}" data-player2="${match.player2}">记录结果</button>`
+                                }
+                            </td>
+                        `;
+                        knockoutBody.appendChild(row);
+                    });
+                }
+            });
+
+            // 为所有按钮添加事件监听器
+            document.querySelectorAll('#knockoutBody .match-actions button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const player1 = this.getAttribute('data-player1');
+                    const player2 = this.getAttribute('data-player2');
+                    const roundName = this.getAttribute('data-round');
+                    
+                    if (action === 'record') {
+                        openKnockoutBattleModal(roundName, player1, player2, false);
+                    } else if (action === 'modify') {
+                        openKnockoutBattleModal(roundName, player1, player2, true);
+                    } else if (action === 'delete') {
+                        deleteBattleRecord(player1, player2);
+                    }
+                });
+            });
+        }
+
+        // 打开淘汰赛对战模态框
+        function openKnockoutBattleModal(roundName, player1, player2, isModify = false) {
+            document.getElementById('battleModalTitle').textContent = isModify ? '修改淘汰赛结果' : '记录淘汰赛结果';
+            document.getElementById('battlePlayers').textContent = `${player1} vs ${player2}`;
+            
+            // 设置对战结果选项 - 淘汰赛没有平局和弃权选项
+            const resultOptions = document.getElementById('battleResultOptions');
+            resultOptions.innerHTML = `
+                <div class="score-option" data-result="member1_win" data-score="2-0">
+                    <input type="radio" name="tournamentBattleResult" value="member1_win" data-score="2-0" style="display: none;">
+                    <span>${player1} 获胜 (2-0)</span>
+                </div>
+                <div class="score-option" data-result="member1_win" data-score="2-1">
+                    <input type="radio" name="tournamentBattleResult" value="member1_win" data-score="2-1" style="display: none;">
+                    <span>${player1} 获胜 (2-1)</span>
+                </div>
+                <div class="score-option" data-result="member2_win" data-score="2-0">
+                    <input type="radio" name="tournamentBattleResult" value="member2_win" data-score="2-0" style="display: none;">
+                    <span>${player2} 获胜 (2-0)</span>
+                </div>
+                <div class="score-option" data-result="member2_win" data-score="2-1">
+                    <input type="radio" name="tournamentBattleResult" value="member2_win" data-score="2-1" style="display: none;">
+                    <span>${player2} 获胜 (2-1)</span>
+                </div>
+            `;
+            
+            // 添加点击事件
+            document.querySelectorAll('.score-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有选中状态
+                    document.querySelectorAll('.score-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    // 添加当前选中状态
+                    this.classList.add('selected');
+                    // 选中对应的单选按钮
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                });
+            });
+            
+            // 如果是修改模式，设置当前结果
+            if (isModify) {
+                const battleRecord = getBattleRecord(player1, player2, currentTournament.name + " - " + roundName);
+                if (battleRecord) {
+                    const result = battleRecord.result;
+                    const score = battleRecord.score || '2-0';
+                    
+                    // 找到对应的选项并选中
+                    const option = document.querySelector(`.score-option[data-result="${result}"][data-score="${score}"]`);
+                    if (option) {
+                        option.classList.add('selected');
+                        const radio = option.querySelector('input[type="radio"]');
+                        radio.checked = true;
+                    }
+                }
+                document.getElementById('deleteBattle').style.display = 'inline-block';
+            } else {
+                document.getElementById('deleteBattle').style.display = 'none';
+            }
+            
+            // 存储当前淘汰赛信息
+            window.currentKnockout = { roundName, player1, player2, isModify };
+            window.currentBattle = null; // 确保这是淘汰赛
+            
+            document.getElementById('battleResultModal').style.display = 'flex';
+        }
+
+        // 打开淘汰赛模态框
+        function openKnockoutModal() {
+            if (!currentTournament || !currentTournament.knockout_bracket) {
+                alert('淘汰赛尚未生成');
+                return;
+            }
+
+            const knockoutMatchSelect = document.getElementById('knockoutMatchSelect');
+            knockoutMatchSelect.innerHTML = '<option value="">--请选择对阵--</option>';
+
+            // 添加淘汰赛数据
+            Object.entries(currentTournament.knockout_bracket).forEach(([roundName, matches]) => {
+                // 跳过轮空晋级
+                if (roundName === "轮空晋级") return;
+                
+                matches.forEach(match => {
+                    if (!match.completed) {
+                        const option = document.createElement('option');
+                        option.value = `${roundName}|${match.player1}|${match.player2}`;
+                        option.textContent = `${roundName}: ${match.player1} vs ${match.player2}`;
+                        knockoutMatchSelect.appendChild(option);
+                    }
+                });
+            });
+
+            document.getElementById('knockoutModal').style.display = 'flex';
+        }
+
+        // 选择淘汰赛对阵
+        function selectKnockoutMatch() {
+            const selectedValue = document.getElementById('knockoutMatchSelect').value;
+            if (!selectedValue) {
+                alert('请选择淘汰赛对阵');
+                return;
+            }
+
+            const [roundName, player1, player2] = selectedValue.split('|');
+            
+            document.getElementById('knockoutModal').style.display = 'none';
+            
+            // 打开对战记录模态框
+            openKnockoutBattleModal(roundName, player1, player2, false);
+        }
+
+        // 备份数据
+        function backupData() {
+            const backupData = {
+                members: members,
+                battle_history: battleHistory,
+                tournaments: tournaments,
+                backup_time: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const url = URL.createObjectURL(dataBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pingpong_backup_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('数据备份成功');
+        }
+
+        // 恢复数据
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const backupData = JSON.parse(event.target.result);
+                        
+                        members = backupData.members || {};
+                        battleHistory = backupData.battle_history || [];
+                        tournaments = backupData.tournaments || [];
+                        currentTournament = null;
+                        
+                        saveData();
+                        updateMemberLists();
+                        updateRanking();
+                        updateAdminStats();
+                        updateTournamentLists();
+                        
+                        alert('数据恢复成功');
+                    } catch (error) {
+                        alert('恢复失败: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // 初始化系统
+        function initializeSystem() {
+            if (confirm('确定要初始化系统吗？这将删除所有数据，操作不可逆！')) {
+                members = {};
+                battleHistory = [];
+                tournaments = [];
+                currentTournament = null;
+                
+                saveData();
+                updateMemberLists();
+                updateRanking();
+                updateAdminStats();
+                updateTournamentLists();
+                
+                alert('系统已初始化，所有数据已清空');
+            }
+        }
+    </script>
+</body>
+</html>
